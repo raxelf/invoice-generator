@@ -14,13 +14,13 @@ func main() {
 	// local env
 	_ = godotenv.Load()
 
-	config.ConnectDatabase()
-	
-	migrate.RunMigration()
-	seed.RunSeeders()
+	db := config.ConnectDatabase()
+
+	migrate.RunMigration(db)
+	seed.RunSeeders(db)
 
 	app := fiber.New()
-	
+
 	app.Get("/", func(c fiber.Ctx) error {
 		return c.JSON(fiber.Map{"status": "ok"})
 	})

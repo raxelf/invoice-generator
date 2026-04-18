@@ -1,19 +1,13 @@
 package seed
 
 import (
-	"invoice-backend/internal/config"
 	"invoice-backend/internal/model"
 	"log"
 
-	"github.com/joho/godotenv"
 	"gorm.io/gorm"
 )
 
-func RunSeeders() {
-	_ = godotenv.Load()
-
-	db := config.ConnectDatabase()
-
+func RunSeeders(db *gorm.DB) {
 	seedUsers(db)
 	seedItems(db)
 }

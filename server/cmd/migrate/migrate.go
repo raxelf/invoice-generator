@@ -1,18 +1,13 @@
 package migrate
 
 import (
-	"invoice-backend/internal/config"
 	"invoice-backend/internal/model"
 	"log"
 
-	"github.com/joho/godotenv"
+	"gorm.io/gorm"
 )
 
-func RunMigration() {
-	_ = godotenv.Load()
-
-	db := config.ConnectDatabase()
-
+func RunMigration(db *gorm.DB) {
 	err := db.AutoMigrate(
 		&model.User{},
 		&model.Item{},
