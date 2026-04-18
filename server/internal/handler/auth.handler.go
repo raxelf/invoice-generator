@@ -23,14 +23,7 @@ func (h *Handler) Login(c fiber.Ctx) error {
 	}
 
 	user, err := repository.FindUserByEmail(h.DB, input.Email)
-	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"code":    fiber.StatusUnauthorized,
-			"message": "Invalid email or password",
-		})
-	}
-
-	if !utils.CheckPassword(user.Password, input.Password) {
+	if err != nil || !utils.CheckPassword(user.Password, input.Password) {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"code":    fiber.StatusUnauthorized,
 			"message": "Invalid email or password",
@@ -50,7 +43,6 @@ func (h *Handler) Login(c fiber.Ctx) error {
 		"message": "Login successful",
 		"data": fiber.Map{
 			"token": token,
-			"role":  user.Role,
 		},
 	})
 }

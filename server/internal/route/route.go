@@ -2,6 +2,7 @@ package route
 
 import (
 	"invoice-backend/internal/handler"
+	"invoice-backend/internal/middleware"
 
 	"github.com/gofiber/fiber/v3"
 	"gorm.io/gorm"
@@ -15,6 +16,6 @@ func RouteSetup(app *fiber.App, db *gorm.DB) {
 	api.Post("/login", h.Login)
 	// api.Get("/items", nil)
 
-	// // Protected Routes
-	// api.Post("/invoice", nil)
+	// Protected Routes
+	api.Post("/invoice", middleware.Authorization, h.CreateInvoice)
 }
