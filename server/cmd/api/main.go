@@ -7,7 +7,7 @@ import (
 	"invoice-backend/cmd/migrate"
 	"invoice-backend/cmd/seed"
 	"invoice-backend/internal/config"
-	// "invoice-backend/internal/route"
+	"invoice-backend/internal/route"
 )
 
 func main() {
@@ -19,13 +19,25 @@ func main() {
 	migrate.RunMigration(db)
 	seed.RunSeeders(db)
 
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		ErrorHandler: func(c fiber.Ctx, err error) error {
+			code := fiber.StatusInternalServerError
+			message := "Internal server error"
 
-	app.Get("/", func(c fiber.Ctx) error {
-		return c.JSON(fiber.Map{"status": "ok"})
+			if e, ok := err.(*fiber.Error); ok {
+				code = e.Code
+				message = e.Message
+			}
+
+			return c.Status(code).JSON(fiber.Map{
+				"code":    code,
+				"message": message,
+			})
+		},
 	})
 
-	// route.RouteSetup(app)
+	// pass app & db to routes
+	route.RouteSetup(app, db)
 
 	app.Listen(":8080")
 }
