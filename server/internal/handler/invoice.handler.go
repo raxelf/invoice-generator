@@ -33,15 +33,20 @@ func (h *Handler) CreateInvoice(c fiber.Ctx) error {
 		})
 	}
 
-	if err := service.CreateInvoice(h.DB, input, userID); err != nil {
+	invoice, err := service.CreateInvoice(h.DB, input, userID)
+	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"code": fiber.StatusInternalServerError,
+			"code":    fiber.StatusInternalServerError,
 			"message": err.Error(),
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"code":    fiber.StatusOK,
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"code":    fiber.StatusCreated,
 		"message": "Invoice created",
+		"data": fiber.Map{
+			"invoice_number": invoice.InvoiceNumber,
+			"total_amount":   invoice.TotalAmount,
+		},
 	})
 }

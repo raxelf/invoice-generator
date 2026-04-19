@@ -23,8 +23,10 @@ type CreateInvoiceInput struct {
 	Items           []InvoiceItemInput `json:"items" validate:"required,min=1,dive"`
 }
 
-func CreateInvoice(db *gorm.DB, input CreateInvoiceInput, createdBy string) error {
-	return db.Transaction(func(tx *gorm.DB) error {
+func CreateInvoice(db *gorm.DB, input CreateInvoiceInput, createdBy string) (*model.Invoice, error) {
+	var createdInvoice *model.Invoice
+
+	err := db.Transaction(func(tx *gorm.DB) error {
 		var details []model.InvoiceDetail
 		var grandTotal int64
 
@@ -70,6 +72,13 @@ func CreateInvoice(db *gorm.DB, input CreateInvoiceInput, createdBy string) erro
 			return err
 		}
 
+		createdInvoice = &invoice
 		return nil
 	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return createdInvoice, nil
 }
