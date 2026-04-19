@@ -13,7 +13,7 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-50">
+    <nav className="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-50 print:hidden">
       <div className="container mx-auto px-4 max-w-5xl h-16 sm:h-20 flex items-center justify-between">
         {/* Brand */}
         <div

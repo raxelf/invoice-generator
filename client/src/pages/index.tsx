@@ -23,13 +23,15 @@ export default function Home() {
         <title>New Invoice | Fleet Logistic</title>
       </Head>
 
-      <div className="container mx-auto px-4 py-12 max-w-5xl">
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">New Invoice</h1>
-          <p className="text-gray-500">Create a new shipping manifest and invoice.</p>
+      <div className="container mx-auto px-4 py-8 sm:py-12 max-w-5xl">
+        <div className="mb-8 sm:mb-12 print:hidden">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">New Invoice</h1>
+          <p className="text-gray-500 text-sm sm:text-base">Create a new shipping manifest and invoice.</p>
         </div>
 
-        <Stepper />
+        <div className="print:hidden">
+          <Stepper />
+        </div>
 
         <div className="mt-16">
           {currentStep === 1 && <Step1Info />}
