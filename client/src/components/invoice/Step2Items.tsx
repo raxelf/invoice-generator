@@ -60,6 +60,18 @@ const Step2Items = () => {
     toast.success(`Removed: ${name}`, { icon: "🗑️" });
   };
 
+  const calculateTotal = () => {
+    return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(price);
+  };
+
   const handleNext = () => {
     if (items.length === 0) {
       toast.error("Please add at least one item");
@@ -67,6 +79,7 @@ const Step2Items = () => {
     }
     setStep(3);
   };
+
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 flex flex-col gap-8">
@@ -113,7 +126,14 @@ const Step2Items = () => {
                       <span className="font-bold text-gray-900 text-sm">
                         {item.Code}
                       </span>
-                      <span className="text-xs text-gray-500">{item.Name}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-500">
+                          {item.Name}
+                        </span>
+                        <span className="text-[10px] font-bold text-primary bg-primary/5 px-2 py-0.5 rounded">
+                          {formatPrice(item.Price)}
+                        </span>
+                      </div>
                     </div>
                     <div className="bg-primary/10 text-primary px-3 py-1 rounded-lg text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
                       Click to Add
@@ -124,7 +144,6 @@ const Step2Items = () => {
                 <div className="px-6 py-8 text-center text-gray-400 italic text-sm">
                   No items found for &quot;{debouncedCode}&quot;
                 </div>
-
               )}
             </div>
           )}
@@ -136,60 +155,91 @@ const Step2Items = () => {
         <table className="w-full border-collapse">
           <thead>
             <tr className="border-b border-gray-100 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-left">
-              <th className="pb-4 pt-2">Item Code</th>
-              <th className="pb-4 pt-2 px-4 whitespace-nowrap">Item Name</th>
+              <th className="pb-4 pt-2">Item Code / Name</th>
               <th className="pb-4 pt-2 px-4 text-center">Quantity</th>
-              <th className="pb-4 pt-2 px-4 text-right">Action</th>
+              <th className="pb-4 pt-2 px-4 text-right">Price</th>
+              <th className="pb-4 pt-2 px-4 text-right">Subtotal</th>
+              <th className="pb-4 pt-2 text-right">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
             {items.length === 0 ? (
               <tr>
                 <td
-                  colSpan={4}
+                  colSpan={5}
                   className="py-12 text-center text-gray-400 italic text-sm"
                 >
                   No items added yet. Search for a code above to start.
                 </td>
               </tr>
             ) : (
-              items.map((item) => (
-                <tr
-                  key={item.id}
-                  className="group hover:bg-gray-50 transition-colors"
-                >
-                  <td className="py-4 font-bold text-gray-900">{item.code}</td>
-                  <td className="py-4 px-4 text-gray-600 text-sm">
-                    {item.name}
+              <>
+                {items.map((item) => (
+                  <tr
+                    key={item.id}
+                    className="group hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="py-4">
+                      <div className="flex flex-col">
+                        <span className="font-bold text-gray-900">
+                          {item.code}
+                        </span>
+                        <span className="text-xs text-gray-600">
+                          {item.name}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4">
+                      <div className="flex justify-center">
+                        <input
+                          type="number"
+                          min="1"
+                          value={item.quantity}
+                          onChange={(e) =>
+                            updateQuantity(
+                              item.id,
+                              parseInt(e.target.value) || 1,
+                            )
+                          }
+                          className="w-20 bg-gray-50 border-none rounded-lg px-3 py-2 text-center text-sm font-bold focus:ring-2 focus:ring-primary outline-none"
+                        />
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-right text-sm text-gray-500">
+                      {formatPrice(item.price)}
+                    </td>
+                    <td className="py-4 px-4 text-right font-bold text-gray-900">
+                      {formatPrice(item.price * item.quantity)}
+                    </td>
+                    <td className="py-4 text-right">
+                      <button
+                        onClick={() => handleRemove(item.id, item.name)}
+                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {/* Total Row */}
+                <tr>
+                  <td colSpan={3} className="py-6 text-right">
+                    <span className="text-sm font-bold text-gray-400 uppercase tracking-wider">
+                      Grand Total
+                    </span>
                   </td>
-                  <td className="py-4 px-4">
-                    <div className="flex justify-center">
-                      <input
-                        type="number"
-                        min="1"
-                        value={item.quantity}
-                        onChange={(e) =>
-                          updateQuantity(item.id, parseInt(e.target.value) || 1)
-                        }
-                        className="w-20 bg-gray-50 border-none rounded-lg px-3 py-2 text-center text-sm font-bold focus:ring-2 focus:ring-primary outline-none"
-                      />
-                    </div>
+                  <td className="py-6 px-4 text-right">
+                    <span className="text-xl font-black text-primary">
+                      {formatPrice(calculateTotal())}
+                    </span>
                   </td>
-                  <td className="py-4 px-4 text-right">
-                    <button
-                      onClick={() => handleRemove(item.id, item.name)}
-                      className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </td>
+                  <td></td>
                 </tr>
-              ))
+              </>
             )}
           </tbody>
         </table>
       </div>
-
 
       {/* Footer Buttons */}
       <div className="flex justify-between items-center mt-8 pt-8 border-t border-gray-100">
@@ -211,3 +261,4 @@ const Step2Items = () => {
 };
 
 export default Step2Items;
+
