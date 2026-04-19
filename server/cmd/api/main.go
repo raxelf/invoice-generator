@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/joho/godotenv"
 
 	"invoice-backend/cmd/migrate"
@@ -36,8 +37,15 @@ func main() {
 		},
 	})
 
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"http://localhost:3000"},
+		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+	}))
+
 	// pass app & db to routes
 	route.RouteSetup(app, db)
 
 	app.Listen(":8080")
 }
+
