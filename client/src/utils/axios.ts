@@ -23,4 +23,18 @@ api.interceptors.request.use(
   (error: unknown) => Promise.reject(error),
 );
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      if (!error.config?.url?.includes("/login")) {
+        Cookies.remove("token");
+        window.location.href = "/login";
+      }
+    }
+    return Promise.reject(error);
+  },
+);
+
 export default api;
+
