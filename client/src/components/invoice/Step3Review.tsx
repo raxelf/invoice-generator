@@ -1,11 +1,12 @@
 import { useInvoiceStore } from "@/store/useInvoiceStore";
-import { ArrowLeft, Send, Building2 } from "lucide-react";
+import { ArrowLeft, Send, Building2, Printer } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "@/utils/axios";
 import toast from "react-hot-toast";
 import { getUser } from "@/utils/getUser";
 import { useRouter } from "next/router";
 import { formatPrice } from "@/utils/formatPrice";
+import PrintInvoice from "./PrintInvoice";
 
 const Step3Review = () => {
   const router = useRouter();
@@ -70,7 +71,8 @@ const Step3Review = () => {
   });
 
   return (
-    <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <>
+      <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 w-full print:hidden">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Content */}
         <div className="lg:col-span-2 flex flex-col gap-6">
@@ -175,6 +177,19 @@ const Step3Review = () => {
 
             <div className="mt-6 sm:mt-8 flex flex-col gap-3">
               <button
+                onClick={() => {
+                  const originalTitle = document.title;
+                  const datePart = new Date().toISOString().slice(0, 10);
+                  document.title = `Invoice-${datePart}`;
+                  window.print();
+                  document.title = originalTitle;
+                }}
+                className="w-full bg-white border border-gray-200 text-gray-700 py-3.5 sm:py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gray-50 transition-all active:scale-95 text-sm sm:text-base border-dashed"
+              >
+                Print Invoice <Printer size={18} />
+              </button>
+
+              <button
                 onClick={() => mutation.mutate()}
                 disabled={mutation.isPending}
                 className="w-full bg-primary text-white py-3.5 sm:py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-secondary shadow-lg shadow-primary/20 transition-all active:scale-95 disabled:opacity-50 disabled:active:scale-100 text-sm sm:text-base"
@@ -205,7 +220,9 @@ const Step3Review = () => {
         </button>
       </div>
 
-    </div>
+      </div>
+      <PrintInvoice />
+    </>
   );
 };
 
