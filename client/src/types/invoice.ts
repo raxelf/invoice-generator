@@ -23,3 +23,10 @@ export type InvoiceState = {
   setStep: (step: number) => void;
   reset: () => void;
 };
+
+export type ItemResult = {
+  ID: string;
+  Code: string;
+  Name: string;
+  Price: number;
+}
