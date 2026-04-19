@@ -17,5 +17,5 @@ func RouteSetup(app *fiber.App, db *gorm.DB) {
 	api.Get("/items", h.GetItem)
 
 	// Protected Routes
-	api.Post("/invoice", middleware.Authorization, h.CreateInvoice)
+	api.Post("/invoices", middleware.Authorization, h.CreateInvoice)
 }
