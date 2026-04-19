@@ -17,3 +17,14 @@ func FindItems(db *gorm.DB, code string) ([]model.Item, error) {
 	result := query.Find(&items)
 	return items, result.Error
 }
+
+func FindItemByCode(db *gorm.DB, code string) (*model.Item, error) {
+	var item model.Item
+
+	result := db.Where("code = ?", code).First(&item)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &item, nil
+}

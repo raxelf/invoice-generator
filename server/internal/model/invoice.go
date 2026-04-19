@@ -11,9 +11,9 @@ type Invoice struct {
 	ID string `gorm:"primaryKey;type:varchar(36)"`
 	InvoiceNumber string `gorm:"uniqueIndex;not null"`
 	SenderName string `gorm:"not null"`
-	SenderAddress string `gorm:"not null"`
+	SenderAddress string `gorm:"type:text;not null"`
 	ReceiverName string `gorm:"not null"`
-	ReceiverAddress string `gorm:"not null"`
+	ReceiverAddress string `gorm:"type:text;not null"`
 	TotalAmount int64 `gorm:"not null"`
 	CreatedBy string `gorm:"type:varchar(36);not null"`
 	CreatedAt time.Time
