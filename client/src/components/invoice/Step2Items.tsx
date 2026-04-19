@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "@/utils/axios";
 import toast from "react-hot-toast";
 import { ItemResult } from "@/types/invoice";
+import { formatPrice } from "@/utils/formatPrice";
 
 const Step2Items = () => {
   const { items, addItem, removeItem, updateQuantity, setStep } =
@@ -64,14 +65,6 @@ const Step2Items = () => {
     return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    }).format(price);
-  };
-
   const handleNext = () => {
     if (items.length === 0) {
       toast.error("Please add at least one item");
@@ -82,30 +75,31 @@ const Step2Items = () => {
 
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 flex flex-col gap-8">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-8 flex flex-col gap-6 sm:gap-8">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
           Shipment Details
         </h2>
-        <p className="text-gray-500 text-sm">Enter item codes to add them.</p>
+        <p className="text-gray-500 text-xs sm:text-sm">Enter item codes to add them.</p>
       </div>
 
       {/* Search Section */}
-      <div className="bg-gray-50 p-6 rounded-xl flex flex-col gap-3">
+      <div className="bg-gray-50 p-4 sm:p-6 rounded-xl flex flex-col gap-2 sm:gap-3">
         <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">
           Item Code
         </label>
         <div className="relative group">
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
-            <ScanLine size={20} />
+          <div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
+            <ScanLine size={18} className="sm:w-5 sm:h-5" />
           </div>
           <input
             type="text"
-            placeholder="Enter item code (e.g. BRG-001)"
+            placeholder="Search code..."
             value={searchCode}
             onChange={(e) => setSearchCode(e.target.value)}
-            className="w-full bg-white border border-gray-200 rounded-xl pl-12 pr-12 py-4 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all shadow-sm"
+            className="w-full bg-white border border-gray-200 rounded-xl pl-10 sm:pl-12 pr-10 sm:pr-12 py-3 sm:py-4 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all shadow-sm"
           />
+
           {(isLoading || isFetching) && (
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center">
               <Loader2 size={20} className="text-primary animate-spin" />
@@ -123,21 +117,22 @@ const Step2Items = () => {
                     className="px-6 py-3 hover:bg-gray-50 cursor-pointer flex items-center justify-between group transition-colors"
                   >
                     <div className="flex flex-col">
-                      <span className="font-bold text-gray-900 text-sm">
+                      <span className="font-bold text-gray-900 text-xs sm:text-sm">
                         {item.Code}
                       </span>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-500">
+                        <span className="text-[10px] sm:text-xs text-gray-500">
                           {item.Name}
                         </span>
-                        <span className="text-[10px] font-bold text-primary bg-primary/5 px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-bold text-primary bg-primary/5 px-1.5 py-0.5 rounded">
                           {formatPrice(item.Price)}
                         </span>
                       </div>
                     </div>
-                    <div className="bg-primary/10 text-primary px-3 py-1 rounded-lg text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                      Click to Add
+                    <div className="bg-primary/10 text-primary px-2 sm:px-3 py-1 rounded-lg text-[9px] sm:text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                      Add
                     </div>
+
                   </div>
                 ))
               ) : (
@@ -151,17 +146,19 @@ const Step2Items = () => {
       </div>
 
       {/* Items Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="border-b border-gray-100 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-left">
-              <th className="pb-4 pt-2">Item Code / Name</th>
-              <th className="pb-4 pt-2 px-4 text-center">Quantity</th>
-              <th className="pb-4 pt-2 px-4 text-right">Price</th>
-              <th className="pb-4 pt-2 px-4 text-right">Subtotal</th>
-              <th className="pb-4 pt-2 text-right">Action</th>
-            </tr>
-          </thead>
+      <div className="overflow-x-auto -mx-4 sm:mx-0">
+        <div className="min-w-[500px] px-4 sm:px-0">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-gray-100 text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest text-left">
+                <th className="pb-3 sm:pb-4 pt-2">Item Code / Name</th>
+                <th className="pb-3 sm:pb-4 pt-2 px-3 sm:px-4 text-center">Qty</th>
+                <th className="pb-3 sm:pb-4 pt-2 px-3 sm:px-4 text-right">Price</th>
+                <th className="pb-3 sm:pb-4 pt-2 px-3 sm:px-4 text-right">Subtotal</th>
+                <th className="pb-3 sm:pb-4 pt-2 text-right">Action</th>
+              </tr>
+            </thead>
+
           <tbody className="divide-y divide-gray-50">
             {items.length === 0 ? (
               <tr>
@@ -201,8 +198,9 @@ const Step2Items = () => {
                               parseInt(e.target.value) || 1,
                             )
                           }
-                          className="w-20 bg-gray-50 border-none rounded-lg px-3 py-2 text-center text-sm font-bold focus:ring-2 focus:ring-primary outline-none"
+                          className="w-16 sm:w-20 bg-gray-50 border-none rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-center text-xs sm:text-sm font-bold focus:ring-2 focus:ring-primary outline-none"
                         />
+
                       </div>
                     </td>
                     <td className="py-4 px-4 text-right text-sm text-gray-500">
@@ -223,13 +221,13 @@ const Step2Items = () => {
                 ))}
                 {/* Total Row */}
                 <tr>
-                  <td colSpan={3} className="py-6 text-right">
-                    <span className="text-sm font-bold text-gray-400 uppercase tracking-wider">
+                  <td colSpan={3} className="py-4 sm:py-6 text-right">
+                    <span className="text-[10px] sm:text-sm font-bold text-gray-400 uppercase tracking-wider">
                       Grand Total
                     </span>
                   </td>
-                  <td className="py-6 px-4 text-right">
-                    <span className="text-xl font-black text-primary">
+                  <td className="py-4 sm:py-6 px-3 sm:px-4 text-right">
+                    <span className="text-lg sm:text-xl font-black text-primary">
                       {formatPrice(calculateTotal())}
                     </span>
                   </td>
@@ -239,23 +237,25 @@ const Step2Items = () => {
             )}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Footer Buttons */}
-      <div className="flex justify-between items-center mt-8 pt-8 border-t border-gray-100">
+      <div className="flex justify-between items-center mt-4 sm:mt-8 pt-6 sm:pt-8 border-t border-gray-100 gap-4">
         <button
           onClick={() => setStep(1)}
-          className="px-6 py-3 rounded-lg font-bold text-gray-500 hover:bg-gray-100 flex items-center gap-2 transition-all"
+          className="flex-1 sm:flex-none px-4 sm:px-6 py-3 rounded-lg font-bold text-gray-500 hover:bg-gray-100 flex items-center justify-center gap-2 transition-all text-sm"
         >
           <ArrowLeft size={18} /> Back
         </button>
         <button
           onClick={handleNext}
-          className="bg-primary text-white px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:bg-secondary shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5 active:translate-y-0"
+          className="flex-[2] sm:flex-none bg-primary text-white px-6 sm:px-8 py-3 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-secondary shadow-lg shadow-primary/20 transition-all text-sm"
         >
-          Next Step <ArrowRight size={18} />
+          Next <ArrowRight size={18} />
         </button>
       </div>
+
     </div>
   );
 };

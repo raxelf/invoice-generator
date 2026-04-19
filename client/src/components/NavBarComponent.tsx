@@ -14,19 +14,20 @@ const NavBar = () => {
 
   return (
     <nav className="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-50">
-      <div className="container mx-auto px-4 max-w-5xl h-20 flex items-center justify-between">
+      <div className="container mx-auto px-4 max-w-5xl h-16 sm:h-20 flex items-center justify-between">
         {/* Brand */}
         <div
-          className="flex items-center gap-3 cursor-pointer group"
+          className="flex items-center gap-2 sm:gap-3 cursor-pointer group"
           onClick={() => router.push("/")}
         >
-          <div className="bg-primary p-2 rounded-lg text-white group-hover:bg-secondary transition-colors">
-            <Truck size={24} />
+          <div className="bg-primary p-1.5 sm:p-2 rounded-lg text-white group-hover:bg-secondary transition-colors">
+            <Truck size={20} className="sm:w-6 sm:h-6" />
           </div>
-          <span className="font-bold text-xl tracking-tight text-gray-900">
+          <span className="font-bold text-lg sm:text-xl tracking-tight text-gray-900 truncate max-w-[120px] sm:max-w-none">
             Fleet Logistic
           </span>
         </div>
+
 
         {/* Actions */}
         <div className="flex items-center gap-6">
