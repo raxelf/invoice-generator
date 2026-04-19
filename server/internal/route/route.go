@@ -14,7 +14,7 @@ func RouteSetup(app *fiber.App, db *gorm.DB) {
 
 	// Public Routes
 	api.Post("/login", h.Login)
-	// api.Get("/items", nil)
+	api.Get("/items", h.GetItem)
 
 	// Protected Routes
 	api.Post("/invoice", middleware.Authorization, h.CreateInvoice)
