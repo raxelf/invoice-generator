@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"invoice-backend/internal/model"
 	"invoice-backend/internal/repository"
+	"invoice-backend/internal/utils"
 	"time"
 
 	"gorm.io/gorm"
@@ -79,6 +80,18 @@ func CreateInvoice(db *gorm.DB, input CreateInvoiceInput, createdBy string) (*mo
 	if err != nil {
 		return nil, err
 	}
+
+	// goroutine send webhook event notif
+	go utils.SendInvoiceWebhook("https://webhook.site/eefd1039-231a-426e-b4a4-c2836fe4dacc",
+		utils.InvoiceWebhookPayload{
+			Event:         "invoice.created",
+			InvoiceNumber: createdInvoice.InvoiceNumber,
+			TotalAmount:   createdInvoice.TotalAmount,
+			CreatedBy:     createdInvoice.CreatedBy,
+			SenderName:    createdInvoice.SenderName,
+			ReceiverName:  createdInvoice.ReceiverName,
+			CreatedAt:     createdInvoice.CreatedAt,
+		})
 
 	return createdInvoice, nil
 }
