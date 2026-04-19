@@ -16,7 +16,7 @@ The application is fully containerized for a seamless "Zero Setup" experience.
 1.  **Clone the repository**:
 
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/raxelf/invoice-generator.git
     cd invoice-generator
     ```
 
@@ -37,6 +37,18 @@ The application is fully containerized for a seamless "Zero Setup" experience.
 4.  **Login Credentials**:
     - **Admin Role**: `admin@mail.id` / `admin123`
     - **Kerani Role**: `kerani@mail.id` / `kerani123`
+
+### Stopping the application
+
+- Stop containers and remove the Compose network:
+  ```bash
+  docker compose down
+  ```
+
+- If you also want to remove volumes and reset database data:
+  ```bash
+  docker compose down -v
+  ```
 
 ## Tech Stack
 
